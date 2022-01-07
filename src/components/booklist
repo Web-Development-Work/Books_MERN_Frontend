@@ -1,0 +1,77 @@
+import React, { Component } from 'react';
+import '../App.css';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+
+class ShowBookList extends Component {
+
+    state = {
+      books:[]
+    }
+  
+  componentDidMount() {
+    axios.get('http://localhost:8082/api/books')
+      .then(res => {
+        this.setState({
+          books: res.data
+        })
+      });
+  }
+
+  render() {
+    let books = this.state.books.map((book) => {
+      return (
+        <div className="card-container">
+            <img src="https://commapress.co.uk/books/the-book-of-cairo/cairo-provisional-v3/image%2Fspan3" alt="/" key={book._id}/>
+            <div key={book} className="desc">
+                <h2> Title :
+                    <Link to={`/show-book/${book._id}`}>
+                        { book.title }
+                    </Link>
+                </h2>
+                <h3>Author : {book.author}</h3>
+                <p>Description :<br/>{book.description}</p>
+            </div>
+        </div>      )
+    });
+    return (
+      <div className="ShowBookList">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <br />
+              <h2 className="display-4 text-center">Books List</h2>
+            </div>
+
+            <div className="col-md-11">
+              <Link to="/create-book" className="btn btn-outline-warning float-right">
+                + Add New Book
+              </Link>
+              <br />
+              <br />
+              <hr />
+            </div>
+
+          </div>
+          <div className="container">
+          <div className="list">
+          {books}
+          </div>
+          </div>
+          
+        </div>
+      </div>
+          // <thead>
+          //   <tr>
+          //     <th>ID</th>
+          //     <th>Title </th>
+          //     <th>author</th>
+          //     <th>description</th>
+          //   </tr>
+          // </thead>
+    );
+  }
+}
+
+export default ShowBookList;
